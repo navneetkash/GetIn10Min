@@ -1,12 +1,12 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { assets } from '../assets/assets'
-import { useAppContext } from './AppContext'
+import { useAppContext } from '../context/AppContext'
 
 const Navbar = () => {
     const [open, setOpen] = React.useState(false)
     const { user, setUser, setShowUserLogin, navigate } = useAppContext();
-    const logout = async = () => {
+    const logout = async () => {
         setUser(null);
         navigate('/')
     }
@@ -44,7 +44,7 @@ const Navbar = () => {
                 <img src={assets.menu_icon} alt='menu' />
             </button>
 
-            {/* {open && (
+            {open && (
                 <div className={`${open ? 'flex' : 'hidden'} absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden`}>
                     <NavLink to="/" onClick={() => setOpen(false)}>Home</NavLink>
                     <NavLink to="/products" onClick={() => setOpen(false)}>All Products</NavLink>
@@ -67,7 +67,7 @@ const Navbar = () => {
                         </button>
                     )}
                 </div>
-            )} */}
+            )}
 
         </nav>
     )
