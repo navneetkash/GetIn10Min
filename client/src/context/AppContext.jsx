@@ -29,7 +29,7 @@ export const AppContextProvider = ({children})=>{
         } else {
             cartData[itemId] = 1;
         }
-        setCartItems(cartdata);
+        setCartItems(cartData);
         toast.success("Added to Cart")
     }
 
