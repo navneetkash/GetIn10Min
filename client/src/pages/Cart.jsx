@@ -27,12 +27,12 @@ const Cart = () => {
 
     useEffect(()=>{
         if(products.length > 0 && cartItems){
-            getCart
+            getCart()
         }
     },[products,cartItems])
 
     return products.length > 0 && cartItems ? (
-        <div className="flex flex-col md:flex-row py-16 max-w-6xl w-full px-6 mx-auto">
+        <div className="flex flex-col md:flex-row mt-16">
             <div className='flex-1 max-w-4xl'>
                 <h1 className="text-3xl font-medium mb-6">
                     Shopping Cart <span className="text-sm text-primary">{getCartCount()} Items</span>
@@ -68,7 +68,7 @@ const Cart = () => {
                             </div>
                         </div>
                         <p className="text-center">{currency}{product.offerPrice * product.quantity}</p>
-                        <button onClick={()=>{removeFromCart()}} className="cursor-pointer mx-auto">
+                        <button onClick={()=>removeFromCart()} className="cursor-pointer mx-auto">
                             <img src={assets.remove_icon} alt="remove" className="inline-block w-6 h-6"></img>
                         </button>
                     </div>)
@@ -131,7 +131,7 @@ const Cart = () => {
                     </p>
                 </div>
 
-                <button onClick={placeOrder()} className="w-full py-3 mt-6 cursor-pointer bg-primary text-white font-medium hover:bg-primary-dull transition">
+                <button onClick={placeOrder} className="w-full py-3 mt-6 cursor-pointer bg-primary text-white font-medium hover:bg-primary-dull transition">
                     {paymentOption === "COD" ? "Place Order" : "Proceed to Checkout"}
                 </button>
             </div>
@@ -139,4 +139,4 @@ const Cart = () => {
     ) : null
 }
 
-export default Cart
+export default Cart;
