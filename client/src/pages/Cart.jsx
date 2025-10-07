@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAppContext } from '../context/AppContext'
 import { assets, dummyAddress } from '../assets/assets'
 
+
 const Cart = () => {
-    const {products, currency, cartItems, removeFromCart, getCartCount, updateCartCount, navigate, getCartAmount} = useAppContext()
+    const {products, currency, cartItems, removeFromCart, getCartCount, updateCartItem, navigate, getCartAmount} = useAppContext();
     const [cartArray, setCartArray] = useState([])
     const [addresses, setAddresses] = useState(dummyAddress)
+    const [showAddress, setShowAddress] = useState(false)
     const [selectedAddresses, setSelectedAddresses] = useState(dummyAddress[0])
     const [paymentOption, setPaymentOption] = useState("COD")
-
-    const [showAddress, setShowAddress] = useState(false)
 
     const getCart = ()=>{
         let tempArray = []
@@ -68,14 +68,14 @@ const Cart = () => {
                             </div>
                         </div>
                         <p className="text-center">{currency}{product.offerPrice * product.quantity}</p>
-                        <button onClick={()=>removeFromCart()} className="cursor-pointer mx-auto">
-                            <img src={assets.remove_icon} alt="remove" className="inline-block w-6 h-6"></img>
+                        <button onClick={()=> removeFromCart()} className="cursor-pointer mx-auto">
+                            <img src={assets.remove_icon} alt="remove" className="inline-block w-6 h-6" />
                         </button>
                     </div>)
                 )}
 
                 <button onClick={()=>{navigate("/products"); scrollTo(0,0)}} className="group cursor-pointer flex items-center mt-8 gap-2 text-primary font-medium">
-                    <img src={assets.arrow_right_icon_colored} alt="arrow" className="group-hover:-translate-x-1 transition"></img>
+                    <img src={assets.arrow_right_icon_colored} alt="arrow" className="group-hover:-translate-x-1 transition" />
                     Continue Shopping
                 </button>
 
@@ -99,7 +99,7 @@ const Cart = () => {
                                     {address.street}, {address.city}, {address.state}, {address.country}
                                 </p>
                                 ))}
-                                <p onClick={() => {navigate("/add-address"); scrollTo(0,0)}} className="text-primary text-center cursor-pointer p-2 hover:bg-primary/10">
+                                <p onClick={() => navigate("/add-address")} className="text-primary text-center cursor-pointer p-2 hover:bg-primary/10">
                                     Add address
                                 </p>
                             </div>
