@@ -1,4 +1,4 @@
-import user from "../models/user.js";
+import User from "../models/User.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -8,20 +8,19 @@ export const register = async (req, res)=>{
     try {
         const {name, email, password} = req.body;
         if(!name || !email || !password){
-            return res.json({success: false, message: "Missing Details"})
+            return res.json({success: false, message: 'Missing Details'})
         }
 
-        const existingUser = await user.findOne({email})
+        const existingUser = await User.findOne({email})
 
-        if(existingUser){
-            return res.json({success: false, message: "User already exist"})
-        }
+        if(existingUser)
+            return res.json({success: false, message: 'User already exist'})
 
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        const User = await user.create({name, email, password: hashedPassword})
+        const user = await User.create({name, email, password: hashedPassword})
 
-        const token = jwt.sign({id:User._id}, process.env.JWT_SECRET, {expiresIn:'7d'})
+        const token = jwt.sign({id:user._id}, process.env.JWT_SECRET, {expiresIn:'7d'})
 
         res.cookie('token', token, {
             httpOnly: true,
@@ -29,7 +28,7 @@ export const register = async (req, res)=>{
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict', // CSRF protection
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
-        return res.json({success: true, User: {email: User.email, name: User.name}})
+        return res.json({success: true, user: {email: user.email, name: user.name}})
     } catch (error) {
         console.log(error.message);
         res.json({success: false, message: error.message});
@@ -46,28 +45,27 @@ export const login = async (req, res)=>{
             return res.json({success: false, message: 'Email and password are required'});
         }
 
-        const User = await user.findOne({email});
+        const user = await User.findOne({email});
 
-        if(!User){
+        if(!user){
             return res.json({success: false, message: 'Invalid Email or password'});
         }
 
-        const isMatch = await bcrypt.compare(password, User.password)
+        const isMatch = await bcrypt.compare(password, user.password)
 
-        if(!isMatch){
+        if(!isMatch)
             return res.json({success: false, message: 'Invalid Email or password'});
-        }
 
-        const token = jwt.sign({id:User._id}, process.env.JWT_SECRET, {expiresIn:'7d'})
+        const token = jwt.sign({id:user._id}, process.env.JWT_SECRET, {expiresIn:'7d'})
 
         res.cookie('token', token, {
-            httpOnly: true,  // Prevent javascript to access cookies
-            secure: process.env.NODE_ENV === 'production', //Use secure cookie in production
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict', // CSRF protection
+            httpOnly: true, 
+            secure: process.env.NODE_ENV === 'production', 
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict', 
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
-        return res.json({success: true, User: {email: User.email, name: User.name}})
+        return res.json({success: true, user: {email: user.email, name: user.name}})
     } catch (error) {
         console.log(error.message);
         res.json({success: false, message: error.message});
@@ -77,25 +75,41 @@ export const login = async (req, res)=>{
 
 // Check Auth : /api/user/is-auth
 
-export const isAuth = async (req, res)=>{
-    try {
-        const {userId} = req.body;
-        const User = await user.findById(userId).select("=password");
-        return res.json({success: true, user})
-    } catch (error) {
-        console.log(error.message);
-        res.json({success: false, message: error.message});
+export const isAuth = async (req, res) => {
+  try {
+    // ✅ get userId directly from req
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "User not authorized" });
     }
-}
+
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    return res.json({ success: true, user });
+  } catch (error) {
+    console.error("isAuth error:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      errorMessage: error.message,
+    });
+  }
+};
+
 
 // Logout user : /api/user/logout
 
 export const logout = async (req, res)=>{
     try {
         res.clearCookie('token', {
-            httpOnly: true,  // Prevent javascript to access cookies
-            secure: process.env.NODE_ENV === 'production', //Use secure cookie in production
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict', // CSRF protection
+            httpOnly: true,  
+            secure: process.env.NODE_ENV === 'production', 
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict', 
         });
         return res.json({success: true, message: "Logged Out"})
     } catch (error) {
