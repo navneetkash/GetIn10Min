@@ -21,8 +21,7 @@
 
 This project requires the following dependencies:
 
-- **Programming Language:** JavaScript
-
+- **Tech Stack:** MongoDB, ExpressJS, ReactJS, NodeJS, TailwindCSS
 ---
 
 ### Installation
@@ -32,4 +31,5 @@ Build **GetIn10Min** from source and install dependencies:
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/navneectkash/GetIn10Min
+
 
