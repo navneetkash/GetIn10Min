@@ -1,9 +1,5 @@
 ﻿# GetIn10Min
 
-_Uncover Insights, Drive Smarter Language Understanding_
-
-![last commit](https://img.shields.io/github/last-commit/navneectkash/GetIn10Min?color=blue)
-
 ---
 
 ## 📑 Table of Contents
@@ -36,3 +32,4 @@ Build **GetIn10Min** from source and install dependencies:
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/navneectkash/GetIn10Min
+
